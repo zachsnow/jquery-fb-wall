@@ -73,7 +73,7 @@ Example
 -------
 
 To run the provided example, run the following from within the same directory as this
-README, and then visit `http://localhost:8000/example.html`_::
+README, and then visit `<http://localhost:8000/example.html>`_::
 
     python -m SimpleHTTPServer
 
