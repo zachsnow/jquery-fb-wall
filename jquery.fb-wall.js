@@ -12,7 +12,7 @@
  *    @licence:         MIT (http://www.opensource.org/licenses/mit-license.php)
  *                      GPL (http://www.gnu.org/licenses/gpl.html)
  *    @documentation:   http://www.neosmart.de/social-media/facebook-wall
- *                      (none)
+ *                      http://bitbucket.org/zachsnow/jquery-fb-wall/
  *    @feedback:        http://www.neosmart.de/blog/jquery-plugin-facebook-wall
  *                      http://zachsnow.com/
  ************************************************************************************************************************************/
@@ -57,8 +57,7 @@
         return meta.each( function() {
             $this = $(this);
             var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
-            
-            var formatDate = o.formatDate ? o.formatDate : function(s){ return s; };
+
             var output = '';
             var avatarBaseURL;
             var baseData;
@@ -240,9 +239,9 @@
      * Defaults
      **************************************************************************/
     $.fn.fbWall.defaults = {
-        avatarAlternative: 'images/avatar_alternative.jpg',
-        avatarExternal: 'images/avatar_external.jpg',
-        id: 'neosmart.gmbh',
+        avatarAlternative: 'images/avatar-alternative.jpg',
+        avatarExternal: 'images/avatar-external.jpg',
+        id: 'fb-wall',
         max: 5,
         showComments: true,
         showGuestEntries: true,
@@ -265,13 +264,14 @@
         return meta.each(function() {
             var $this = $(this);
             var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
+            var accessToken = o.accessToken ? ('access_token=' + o.accessToken) : '';
             var callback = o.callback ? o.callback : function(){};
             var formatDate = o.formatDate ? o.formatDate : function(s){ return s; };
             
             var isLiked = function(likes){
                 var liked = false;
                 $.each(likes, function(i, like){
-                    if(like.id == o.userId){
+                    if(like.id === o.userId){
                         liked = true;
                     }
                 });
@@ -315,7 +315,7 @@
             meta.addClass('fb-likes').addClass('loading').html('');
 
             $.ajax({
-                url: graphURL + o.id + '/likes?access_token=' + o.accessToken,
+                url: graphURL + o.id + '/likes?' + accessToken,
                 dataType: "jsonp",
                 success: function(data, textStatus, XMLHttpRequest) {
                     meta.removeClass('loading');
@@ -324,6 +324,10 @@
             });
 
             var initLikes = function(response) {
+                if(!response || response.error){
+                    return;
+                };
+                
                 var likes = response.data;
                 var img = $('<a href="#">Like</a>');
                 img.addClass('fb-like-button');
@@ -508,8 +512,8 @@
      * Defaults
      **************************************************************************/
     $.fn.fbComments.defaults = {
-        avatarAlternative:      'images/avatar_alternative.jpg',
-        avatarExternal:         'images/avatar_external.jpg',
+        avatarAlternative:      'images/avatar-alternative.jpg',
+        avatarExternal:         'images/avatar-external.jpg',
         max:                    10,
         translateAt:            'at',
         translateLikeThis:      'like this',
@@ -520,5 +524,4 @@
         useAvatarAlternative:   false,
         useAvatarExternal:      false
     };
-
 })(jQuery);

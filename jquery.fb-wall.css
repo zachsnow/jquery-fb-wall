@@ -16,7 +16,7 @@
 }
 .fb-wall.loading {
     height:300px;
-    background:url('images/loader_small.gif') no-repeat center center;
+    background:url('images/loader-small.gif') no-repeat center center;
 }
 .fb-wall-box {
     margin-bottom:10px;
@@ -192,12 +192,12 @@ padding-bottom: 4px;
 
 .fb-comments textarea {
     padding: 10px; outline: none; border: 1px solid #9a9eab; width: 100%; height: 55px; font-size: 13px; -webkit-border-radius: 5px;
--moz-border-radius: 5px;
-border-radius: 5px;
-box-sizing: border-box;
--webkit-box-sizing:border-box;
--moz-box-sizing: border-box;
--ms-box-sizing:  border-box;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing:  border-box;
 }
 
 .fb-comments textarea:focus { background: #f9fafb; }
@@ -208,27 +208,29 @@ box-sizing: border-box;
     cursor: pointer;
 }
 .fb-comments input:hover { background: #66728c; }
+
 /*******************************************************************************
 * Likes.
 *******************************************************************************/
 .fb-likes {
-    float: left;
     overflow: auto;
-
+    clear: both;
 }
 
 .fb-like-text {
     display: block; float: left;
+    padding-left: 10px;
+    line-height: 22px;
 }
 
 .fb-like-button {
     display: block; float: left;
     width: 50px; height: 22px;
-    background:url('images/like_button.gif') no-repeat 0 0 #FFF;
+    background:url('images/like-button.gif') no-repeat 0 0 #FFF;
     text-indent: -99999em;
 }
 
 .fb-like-button-clicked {
-    background:url('images/like_button_clicked.gif') no-repeat 0 0 #FFF;
+    background:url('images/like-button-clicked.gif') no-repeat 0 0 #FFF;
     cursor: default;
 }
