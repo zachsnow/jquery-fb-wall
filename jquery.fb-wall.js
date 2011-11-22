@@ -475,6 +475,7 @@
                 // Attach to submit.
                 meta.find('.fb-comments-form').submit(function(e){
                     e.preventDefault();
+                    e.stopPropagation();
                     
                     var message = $(this).find('textarea').val();
                     if(message){
@@ -482,13 +483,14 @@
                             url: graphURL + o.id + '/comments?message=' + encodeURIComponent(message) + '&method=post&access_token=' + o.accessToken,
                             dataType: "jsonp",
                             success: function(data, textStatus, XMLHttpRequest) {
+                                // TODO: probably want to fade this in as opposed
+                                // to simply reloading the page! 
                                 if(!data.error){
                                     window.location.replace(window.location.href);
                                 }
                             }
                         });
                     }
-                    return false;
                 });
             };
             

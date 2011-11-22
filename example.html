@@ -1,98 +1,144 @@
 <html>
-<head>
-    <title>jquery.fb-wall.js</title>
-    
-    <link rel="stylesheet" type="text/css" href="./jquery.fb-wall.css"></link>
-    <style type="text/css">
-        #page {
-            width: 600px;
-            margin: 0 auto;
-        }
-        #bells-likes {
-            padding-top: 10px;
-        }
-        #jquery-comments {
+    <head>
+        <title>jquery.fb-wall.js</title>
+        
+        <link rel="stylesheet" type="text/css" href="./jquery.fb-wall.css"></link>
+        <style type="text/css">
+            #page {
+                width: 600px;
+                margin: 0 auto;
+            }
             
-        }
-    </style>
-    
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="./jquery.fb-wall.js"></script>
-    <script type="text/javascript">
-        $(function(){
-            $('#bells-likes').fbLikes({
-                id: '159257860803614',
-                accessToken: 'AAAAAAITEghMBALIGENIB15QMKnPt2xkALN9ATXZBbbWiiLL4jlPycuvYbUgl15ZC6f61lpvK1xpwqdYJkKClV7boDEIKQZAcT0sn1sGXQZDZD'
-            });
+            #bells-likes {
+                padding-top: 10px;
+            }
             
-            $('#jquery-comments').fbComments({
-                id: '8937229181',
-                accessToken: 'AAAAAAITEghMBALIGENIB15QMKnPt2xkALN9ATXZBbbWiiLL4jlPycuvYbUgl15ZC6f61lpvK1xpwqdYJkKClV7boDEIKQZAcT0sn1sGXQZDZD',
-                formatDate: function(s){
-                    var date = new Date(s);
-                    var month = date.getMonth() + 1;
-                    var day = date.getDay();
-                    var year = date.getFullYear();
-                    return month + '/' + day + '/' + year;
-                }
+            #jquery-comments {
+                padding-top: 10px;
+            }
+        </style>
+        
+        <script type="text/javascript" src="//connect.facebook.net/en_US/all.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="./jquery.fb-wall.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                var load = function(token){
+                    $('#bells-likes').empty().fbLikes({
+                        id: '159257860803614',
+                        accessToken: token
+                    });
+                    
+                    $('#jquery-comments').empty().fbComments({
+                        id: '8937229181',
+                        accessToken: token,
+                        formatDate: function(s){
+                            var date = new Date(s);
+                            var month = date.getMonth() + 1;
+                            var day = date.getDay();
+                            var year = date.getFullYear();
+                            return month + '/' + day + '/' + year;
+                        }
+                    });
+                };
+                
+                FB.init({
+                    appId: '195063937242473',
+                    status: true,
+                    cookie: true
+                });
+                
+                FB.getLoginStatus(function(e){
+                    if(e.session){
+                        load(e.session.access_token);
+                    }
+                });
+                
+                $('.login').click(function(e){
+                    e.preventDefault();
+                    
+                    FB.login(function(e){
+                        if(e.session){
+                            load(e.session.access_token);
+                        }
+                        else {
+                            alert('Sorry Roger, you tiger now!');
+                        }
+                    }, {
+                        perms: 'publish_stream'
+                    });
+                });
             });
-        });
-    </script>
-</head>
-<body>
-    <div id="page">
-        <h1>jquery.fb-wall.js</h1>
-        <p>
-            So, this here little jQuery plugin can help you with your Facebook-embedding
-            needs; it allows you to embed Facebook walls, likes, comments, and so
-            on pretty easily.  For more information about <code>$.fbWall</code>,
-            check out the original at
-            <a href="http://www.neosmart.de/social-media/facebook-wall">neosmart</a>;
-            I forked it at version 1.2.6, so if all you want is to show
-            a Facebook wall on your site, you should check there for an update
-            (which stands at 1.2.7 as of this writing).  Eventually I'll split this
-            code out into its own plugin, but for now it'll have to do.
-        </p>
-        <p>
-            Ok, on to the good stuff.
-        </p>
+        </script>
+    </head>
+    <body>
+        <div id="page">
+            <h1>jquery.fb-wall.js</h1>
+            <p>
+                So, this here little jQuery plugin can help you with your Facebook-embedding
+                needs; it allows you to embed Facebook walls, likes, comments, and so
+                on pretty easily.  For more information about <code>$.fbWall</code>,
+                check out the original at
+                <a href="http://www.neosmart.de/social-media/facebook-wall">neosmart</a>;
+                I forked it at version 1.2.6, so if all you want is to show
+                a Facebook wall on your site, you should check there for an update
+                (which stands at 1.2.7 as of this writing).  Eventually I'll split this
+                code out into its own plugin, but for now it'll have to do.
+            </p>
+            <p>
+                Ok, on to the good stuff.  But first, we need an access token, so
+                <a href="#" class="login">get an access token</a>; don't worry, the
+                only permission requested is <code>publish_stream</code>, and it is
+                only used if you decide to try out commenting, below.  Note the
+                shitty name of the Facebook application associated with
+                <code>jquery.fb-wall.js</code> (<i>A Nonsense Name</i>), so chosen
+                because Facebook forbade both of the substrings "fb" and "wall".
+                Yuck.
+            </p>
+            
+            <h2><code>$.fbLikes</code></h2>
+            <p>
+                If you want to show a Facebook like button that, when clicked, will
+                like a Facebook object that is <i>not</i> a link (for instance, a
+                photo on Facebook that's in someone's album), you can use this plugin.
+                At the time of the development of <a href="http://friendlens.me">FriendLens</a>
+                the <a href="">official Facebook Like button</a> didn't support that,
+                so we had to roll our own. 
+            </p>
+            <p>
+                This doesn't support unliking, though. Sorry about that.
+            </p>
+            <p>
+                Below you can see the likes associated with the Facebook page for
+                <a href="http://">Bell's Two Hearted Ale</a>, a deliciously hoppy
+                brew.  If you haven't tried it, you should.
+            </p>
+            
+            <img src="http://a7.sphotos.ak.fbcdn.net/hphotos-ak-ash4/228582_159258024136931_159257860803614_361610_6049945_n.jpg" />
+            <div id="bells-likes">
+                <a href="#" class="login">Get an access token first!</a>
+            </div>
+            
+            <h2><code>$.fbComments</code></h2>
+            <p>
+                Same deal as above: we wanted to let users of FriendLens comment on the
+                <b>actual, really real Facebook photo</b> and not on a link to our viewer,
+                so we rolled our own very simple and minimal tool.  It doesn't let you
+                delete comments, and after you successfully post a comment it just
+                reloads the page; again, apologies.
+            </p>
+            <p>
+                Below you can see comments on the Facebook post corresponding to some
+                random <a href="http://jquery.com">jQuery</a> logo.  Because jQuery
+                is pretty nifty.
+            </p>
+            
+            <img src="http://a6.sphotos.ak.fbcdn.net/photos-ak-ash1/v214/139/18/8936834181/n8936834181_352408_3871.jpg" />
+            <div id="jquery-comments">
+                <a href="#" class="login">Get an access token first!</a>
+            </div>
+        </div>
         
-        <h2><code>$.fbLikes</code></h2>
-        <p>
-            If you want to show a Facebook like button that, when clicked, will
-            like a Facebook object that is <i>not</i> a link (for instance, a
-            photo on Facebook that's in someone's album), you can use this plugin.
-            At the time of the development of <a href="http://friendlens.me">FriendLens</a>
-            the <a href="">official Facebook Like button</a> didn't support that,
-            so we had to roll our own. 
-        </p>
-        <p>
-            This doesn't support unliking, though. Sorry about that.
-        </p>
-        <p>
-            Below you can see the likes associated with the Facebook page for
-            <a href="http://">Bell's Two Hearted Ale</a>, a deliciously hoppy
-            brew.  If you haven't tried it, you should.
-        </p>
-        
-        <img src="http://a7.sphotos.ak.fbcdn.net/hphotos-ak-ash4/228582_159258024136931_159257860803614_361610_6049945_n.jpg" />
-        <div id="bells-likes"></div>
-        
-        <h2><code>$.fbComments</code></h2>
-        <p>
-            Same deal as above: we wanted to let users of FriendLens comment on the
-            <b>actual, really real Facebook photo</b> and not on a link to our viewer,
-            so we rolled our own very simple and minimal tool.  It doesn't let you
-            delete comments; again, apologies.
-        </p>
-        <p>
-            Below you can see comments on the Facebook post corresponding to some
-            random <a href="http://jquery.com">jQuery</a> logo.  Because jQuery
-            is pretty nifty.
-        </p>
-        
-        <img src="http://a6.sphotos.ak.fbcdn.net/photos-ak-ash1/v214/139/18/8936834181/n8936834181_352408_3871.jpg" />
-        <div id="jquery-comments"></div>
-    </div>
-</body>
+        <div id="fb-root"></div>
+    </body>
 </html>
